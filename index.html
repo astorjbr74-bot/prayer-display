@@ -1,0 +1,429 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Islamic Prayer Time Display</title>
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+        }
+
+        body {
+            background-color: #3b6e99;
+            color: #ffffff;
+            height: 100vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            padding: 20px 30px;
+            overflow: hidden;
+        }
+
+        /* --- HEADER SECTION --- */
+        header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.3);
+            padding-bottom: 10px;
+        }
+
+        .date-info {
+            font-size: 1.2rem;
+            line-height: 1.4;
+            color: #e0e0e0;
+        }
+
+        .masjid-info {
+            text-align: right;
+        }
+
+        .masjid-title {
+            color: #e2a838;
+            font-size: 2.2rem;
+            font-weight: bold;
+            font-family: 'Times New Roman', Times, serif;
+            letter-spacing: 1px;
+        }
+
+        .masjid-location {
+            color: #d1d1d1;
+            font-size: 0.95rem;
+            font-style: italic;
+        }
+
+        /* --- MAIN SECTION --- */
+        main {
+            display: flex;
+            justify-content: space-around;
+            align-items: center;
+            flex-grow: 1;
+            padding: 20px 0;
+        }
+
+        .next-prayer-container {
+            text-align: center;
+            min-width: 250px;
+        }
+
+        .next-label {
+            font-size: 1.8rem;
+            letter-spacing: 2px;
+            font-weight: 500;
+            color: #ffffff;
+        }
+
+        .next-name {
+            font-size: 3.2rem;
+            font-weight: bold;
+            color: #e2a838;
+            margin: 5px 0;
+        }
+
+        .next-countdown {
+            font-size: 4rem;
+            font-weight: 300;
+            font-family: monospace;
+        }
+
+        .clock-container {
+            display: flex;
+            align-items: flex-start;
+        }
+
+        .main-time {
+            font-size: 10rem;
+            font-weight: bold;
+            line-height: 0.8;
+            letter-spacing: -2px;
+        }
+
+        .clock-side {
+            display: flex;
+            flex-direction: column;
+            margin-left: 15px;
+        }
+
+        .seconds {
+            font-size: 3.5rem;
+            font-weight: bold;
+            color: #e2a838;
+            line-height: 1;
+        }
+
+        .ampm {
+            font-size: 2.5rem;
+            font-weight: bold;
+            margin-top: 5px;
+            line-height: 1;
+        }
+
+        /* --- PRAYER CARDS GRID --- */
+        .prayer-grid {
+            display: grid;
+            grid-template-columns: repeat(6, 1fr);
+            gap: 12px;
+            margin-bottom: 15px;
+        }
+
+        .card {
+            background-color: #2b4f70;
+            border-radius: 8px;
+            padding: 12px 10px;
+            box-shadow: inset 0 0 5px rgba(0,0,0,0.2), 0 4px 8px rgba(0,0,0,0.3);
+            border: 1px solid rgba(255,255,255,0.1);
+            transition: all 0.3s ease;
+        }
+
+        .card.active {
+            border: 2px solid #e2a838;
+            background-color: #23425e;
+            transform: scale(1.02);
+        }
+
+        .card-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 12px;
+        }
+
+        .prayer-name {
+            color: #e2a838;
+            font-weight: bold;
+            font-size: 1.1rem;
+            text-transform: uppercase;
+        }
+
+        .arabic-name {
+            color: #e2a838;
+            font-size: 1.1rem;
+            font-family: 'Traditional Arabic', 'Amiri', serif;
+        }
+
+        .adhan-label {
+            font-size: 0.75rem;
+            color: #a0b8d0;
+            margin-bottom: 2px;
+        }
+
+        .adhan-time {
+            font-size: 1.6rem;
+            font-weight: bold;
+            display: flex;
+            align-items: baseline;
+        }
+
+        .adhan-time .sub-ampm {
+            font-size: 0.8rem;
+            margin-left: 4px;
+        }
+
+        .iqamah-info {
+            margin-top: 8px;
+            font-size: 0.75rem;
+            color: #a0b8d0;
+            display: flex;
+            justify-content: space-between;
+        }
+
+        .iqamah-time {
+            color: #ffffff;
+            font-weight: bold;
+        }
+
+        /* --- FOOTER / TICKER --- */
+        footer {
+            background-color: #5892c5;
+            border-radius: 15px;
+            height: 35px;
+            display: flex;
+            align-items: center;
+            padding: 0 15px;
+            overflow: hidden;
+            box-shadow: inset 0 2px 4px rgba(0,0,0,0.2);
+        }
+
+        .speaker-icon {
+            font-size: 1.2rem;
+            margin-right: 15px;
+        }
+
+        .ticker-text {
+            white-space: nowrap;
+            font-size: 0.95rem;
+            animation: ticker 25s linear infinite;
+        }
+
+        @keyframes ticker {
+            0% { transform: translateX(100%); }
+            100% { transform: translateX(-100%); }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Header Section -->
+    <header>
+        <div class="date-info">
+            <div id="gregorian-date">Loading date...</div>
+            <div id="hijri-date">Loading Hijri date...</div>
+        </div>
+        <div class="masjid-info">
+            <div class="masjid-title">Masjid Al-Hikmah</div>
+            <div class="masjid-location">Parkas, Boalan, Zamboanga City</div>
+        </div>
+    </header>
+
+    <!-- Main Live Display -->
+    <main>
+        <div class="next-prayer-container">
+            <div class="next-label">NEXT</div>
+            <div class="next-name" id="next-prayer-name">--</div>
+            <div class="next-countdown" id="next-prayer-countdown">00:00:00</div>
+        </div>
+
+        <div class="clock-container">
+            <div class="main-time" id="clock-hours-mins">0:00</div>
+            <div class="clock-side">
+                <div class="seconds" id="clock-seconds">00</div>
+                <div class="ampm" id="clock-ampm">AM</div>
+            </div>
+        </div>
+    </main>
+
+    <!-- Prayer Times Grid -->
+    <div class="prayer-grid">
+        <div class="card" id="card-fajr">
+            <div class="card-header">
+                <span class="prayer-name">FAJR</span>
+                <span class="arabic-name">فجر</span>
+            </div>
+            <div class="adhan-label">Adhan</div>
+            <div class="adhan-time">04:31 <span class="sub-ampm">AM</span></div>
+            <div class="iqamah-info">
+                <span>Iqamah</span>
+                <span class="iqamah-time">4:51 AM</span>
+            </div>
+        </div>
+
+        <div class="card" id="card-dhuhr">
+            <div class="card-header">
+                <span class="prayer-name">DHUHR</span>
+                <span class="arabic-name">ظهر</span>
+            </div>
+            <div class="adhan-label">Adhan</div>
+            <div class="adhan-time">11:59 <span class="sub-ampm">AM</span></div>
+            <div class="iqamah-info">
+                <span>Iqamah</span>
+                <span class="iqamah-time">12:14 PM</span>
+            </div>
+        </div>
+
+        <div class="card" id="card-asr">
+            <div class="card-header">
+                <span class="prayer-name">ASR</span>
+                <span class="arabic-name">عصر</span>
+            </div>
+            <div class="adhan-label">Adhan</div>
+            <div class="adhan-time">03:20 <span class="sub-ampm">PM</span></div>
+            <div class="iqamah-info">
+                <span>Iqamah</span>
+                <span class="iqamah-time">3:30 PM</span>
+            </div>
+        </div>
+
+        <div class="card" id="card-maghrib">
+            <div class="card-header">
+                <span class="prayer-name">MAGHRIB</span>
+                <span class="arabic-name">مغرب</span>
+            </div>
+            <div class="adhan-label">Adhan</div>
+            <div class="adhan-time">06:11 <span class="sub-ampm">PM</span></div>
+            <div class="iqamah-info">
+                <span>Iqamah</span>
+                <span class="iqamah-time">6:16 PM</span>
+            </div>
+        </div>
+
+        <div class="card" id="card-isha">
+            <div class="card-header">
+                <span class="prayer-name">ISHA</span>
+                <span class="arabic-name">عشاء</span>
+            </div>
+            <div class="adhan-label">Adhan</div>
+            <div class="adhan-time">07:21 <span class="sub-ampm">PM</span></div>
+            <div class="iqamah-info">
+                <span>Iqamah</span>
+                <span class="iqamah-time">7:36 PM</span>
+            </div>
+        </div>
+
+        <div class="card" id="card-jumuah">
+            <div class="card-header">
+                <span class="prayer-name">JUMU’AH</span>
+                <span class="arabic-name">جمعة</span>
+            </div>
+            <div class="adhan-label">Adhan</div>
+            <div class="adhan-time">11:59 <span class="sub-ampm">AM</span></div>
+            <div class="iqamah-info">
+                <span>Iqamah</span>
+                <span class="iqamah-time">12:24 PM</span>
+            </div>
+        </div>
+    </div>
+
+    <!-- Ticker -->
+    <footer>
+        <span class="speaker-icon">📢</span>
+        <div class="ticker-text">Welcome to Masjid Al-Hikmah — Please ensure mobile phones are turned off or switched to silent mode while inside the prayer hall.</div>
+    </footer>
+
+    <script>
+        const PRAYER_SCHEDULE = [
+            { name: "Fajr",    id: "fajr",    time: [4, 31] },
+            { name: "Dhuhr",   id: "dhuhr",   time: [11, 59] },
+            { name: "Asr",     id: "asr",     time: [15, 20] },
+            { name: "Maghrib", id: "maghrib", time: [18, 11] },
+            { name: "Isha",    id: "isha",    time: [19, 21] }
+        ];
+
+        function getHijriDate(date) {
+            try {
+                // Uses Intl API with Islamic Umm al-Qura Calendar
+                const formatter = new Intl.DateTimeFormat('en-TN-u-ca-islamic-uma-nu-latn', {
+                    day: 'numeric',
+                    month: 'long',
+                    year: 'numeric'
+                });
+                return formatter.format(date) + " AH";
+            } catch (e) {
+                return "Safar 15, 1448"; // Fallback format
+            }
+        }
+
+        function updateDisplay() {
+            const now = new Date();
+
+            // 1. Clock Update
+            let hours = now.getHours();
+            const minutes = String(now.getMinutes()).padStart(2, '0');
+            const seconds = String(now.getSeconds()).padStart(2, '0');
+            const ampm = hours >= 12 ? 'PM' : 'AM';
+            const displayHours = hours % 12 || 12;
+
+            document.getElementById('clock-hours-mins').textContent = `${displayHours}:${minutes}`;
+            document.getElementById('clock-seconds').textContent = seconds;
+            document.getElementById('clock-ampm').textContent = ampm;
+
+            // 2. Gregorian Date Update
+            const dateOptions = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' };
+            document.getElementById('gregorian-date').textContent = now.toLocaleDateString('en-US', dateOptions);
+
+            // 3. Hijri Date Update
+            document.getElementById('hijri-date').textContent = getHijriDate(now);
+
+            // 4. Next Prayer Countdown Logic
+            let nextPrayer = null;
+            let nextPrayerTime = null;
+
+            for (let prayer of PRAYER_SCHEDULE) {
+                const prayerDate = new Date(now);
+                prayerDate.setHours(prayer.time[0], prayer.time[1], 0, 0);
+
+                if (prayerDate > now) {
+                    nextPrayer = prayer;
+                    nextPrayerTime = prayerDate;
+                    break;
+                }
+            }
+
+            if (!nextPrayer) {
+                nextPrayer = PRAYER_SCHEDULE[0];
+                nextPrayerTime = new Date(now);
+                nextPrayerTime.setDate(nextPrayerTime.getDate() + 1);
+                nextPrayerTime.setHours(nextPrayer.time[0], nextPrayer.time[1], 0, 0);
+            }
+
+            document.querySelectorAll('.card').forEach(card => card.classList.remove('active'));
+            const activeCard = document.getElementById(`card-${nextPrayer.id}`);
+            if (activeCard) activeCard.classList.add('active');
+
+            const timeDiff = Math.floor((nextPrayerTime - now) / 1000);
+            const countHours = String(Math.floor(timeDiff / 3600)).padStart(2, '0');
+            const countMins = String(Math.floor((timeDiff % 3600) / 60)).padStart(2, '0');
+            const countSecs = String(timeDiff % 60).padStart(2, '0');
+
+            document.getElementById('next-prayer-name').textContent = nextPrayer.name;
+            document.getElementById('next-prayer-countdown').textContent = `${countHours}:${countMins}:${countSecs}`;
+        }
+
+        updateDisplay();
+        setInterval(updateDisplay, 1000);
+    </script>
+</body>
+</html>
