@@ -19,7 +19,7 @@
             display: flex;
             flex-direction: column;
             justify-content: space-between;
-            padding: 20px 30px;
+            padding: 15px 20px;
             overflow: hidden;
         }
 
@@ -29,12 +29,24 @@
             justify-content: space-between;
             align-items: flex-start;
             border-bottom: 1px solid rgba(255, 255, 255, 0.3);
-            padding-bottom: 10px;
+            padding-bottom: 8px;
         }
 
         .date-info {
-            font-size: 1.2rem;
-            line-height: 1.4;
+            font-family: 'Times New Roman', Times, Georgia, serif;
+            color: #ffffff;
+        }
+
+        .gregorian-date {
+            font-size: clamp(1rem, 2vw, 1.5rem);
+            font-weight: normal;
+            line-height: 1.2;
+        }
+
+        .hijri-date {
+            font-size: clamp(0.85rem, 1.6vw, 1.25rem);
+            font-weight: normal;
+            margin-top: 2px;
             color: #e0e0e0;
         }
 
@@ -44,59 +56,73 @@
 
         .masjid-title {
             color: #e2a838;
-            font-size: 2.2rem;
+            font-size: clamp(1.4rem, 3vw, 2.2rem);
             font-weight: bold;
             font-family: 'Times New Roman', Times, serif;
-            letter-spacing: 1px;
+            line-height: 1.1;
         }
 
         .masjid-location {
             color: #d1d1d1;
-            font-size: 0.95rem;
+            font-size: clamp(0.7rem, 1.2vw, 0.95rem);
             font-style: italic;
         }
 
-        /* --- MAIN SECTION --- */
+        /* --- MAIN LIVE DISPLAY --- */
         main {
             display: flex;
-            justify-content: space-around;
+            justify-content: space-between;
             align-items: center;
             flex-grow: 1;
-            padding: 20px 0;
+            padding: 10px 0;
+            gap: 100px;
         }
 
         .next-prayer-container {
             text-align: center;
-            min-width: 250px;
+            flex: 1;
         }
 
         .next-label {
-            font-size: 1.8rem;
+            font-size: clamp(1.1rem, 2vw, 1.8rem);
             letter-spacing: 2px;
             font-weight: 500;
-            color: #ffffff;
         }
 
         .next-name {
-            font-size: 3.2rem;
+            font-size: clamp(1.8rem, 4vw, 3.2rem);
             font-weight: bold;
             color: #e2a838;
-            margin: 5px 0;
+            margin: 2px 0 0 0;
+        }
+
+        /* Small White "Tomorrow" text styling */
+        .next-day {
+            color: #ffffff;
+            font-size: clamp(0.75rem, 1.3vw, 1rem);
+            font-weight: 500;
+            letter-spacing: 1px;
+            text-transform: uppercase;
+            min-height: 1.2em; /* Keeps layout steady even if text is empty */
+            margin-bottom: 2px;
         }
 
         .next-countdown {
-            font-size: 4rem;
+            font-size: clamp(2rem, 2vw, 2.5rem);
             font-weight: 300;
             font-family: monospace;
+            white-space: nowrap;
         }
 
         .clock-container {
             display: flex;
             align-items: flex-start;
+            justify-content: flex-start;
+            flex: 1.2;
         }
 
         .main-time {
-            font-size: 10rem;
+            font-size: clamp(4.5rem, 11vw, 10rem);
             font-weight: bold;
             line-height: 0.8;
             letter-spacing: -2px;
@@ -105,20 +131,21 @@
         .clock-side {
             display: flex;
             flex-direction: column;
-            margin-left: 15px;
+            margin-left: 8px;
         }
 
         .seconds {
-            font-size: 3.5rem;
+            font-size: clamp(1.8rem, 4vw, 3.5rem);
             font-weight: bold;
+            margin-top: 10px;
             color: #e2a838;
             line-height: 1;
         }
 
         .ampm {
-            font-size: 2.5rem;
+            font-size: clamp(1.2rem, 3.5vw, 2.5rem);
             font-weight: bold;
-            margin-top: 5px;
+            margin-top: 15px;
             line-height: 1;
         }
 
@@ -126,14 +153,14 @@
         .prayer-grid {
             display: grid;
             grid-template-columns: repeat(6, 1fr);
-            gap: 12px;
-            margin-bottom: 15px;
+            gap: 15px;
+            margin-bottom: 8px;
         }
 
         .card {
             background-color: #2b4f70;
-            border-radius: 8px;
-            padding: 12px 10px;
+            border-radius: 15px;
+            padding: 3px 8px;
             box-shadow: inset 0 0 5px rgba(0,0,0,0.2), 0 4px 8px rgba(0,0,0,0.3);
             border: 1px solid rgba(255,255,255,0.1);
             transition: all 0.3s ease;
@@ -142,80 +169,82 @@
         .card.active {
             border: 2px solid #e2a838;
             background-color: #23425e;
-            transform: scale(1.02);
         }
 
         .card-header {
             display: flex;
             justify-content: space-between;
             align-items: center;
-            margin-bottom: 12px;
+            margin-bottom: .5px;
         }
 
         .prayer-name {
             color: #e2a838;
+            margin-top: 3px;
             font-weight: bold;
-            font-size: 1.1rem;
+            font-size: clamp(1.5rem, 2.5vw, 3rem);
             text-transform: uppercase;
         }
 
         .arabic-name {
             color: #e2a838;
-            font-size: 1.1rem;
+            font-size: clamp(1.5rem, 2.5vw, 3rem);
             font-family: 'Traditional Arabic', 'Amiri', serif;
         }
 
         .adhan-label {
-            font-size: 0.75rem;
-            color: #a0b8d0;
-            margin-bottom: 2px;
+            font-size: clamp(1.3rem, 1vw, 4rem);
+            color: #88929e;
         }
 
         .adhan-time {
-            font-size: 1.6rem;
+            font-size: clamp(1.5rem, 2.5vw, 3rem);
             font-weight: bold;
             display: flex;
-            align-items: baseline;
+            align-items: center;
+            margin-left: 28px;
+            white-space: nowrap;
         }
 
         .adhan-time .sub-ampm {
-            font-size: 0.8rem;
-            margin-left: 4px;
+            font-size: clamp(1.3rem, 1vw, 4rem);
+            margin-left: 7px;
         }
 
         .iqamah-info {
-            margin-top: 8px;
-            font-size: 0.75rem;
-            color: #a0b8d0;
+            margin-top: 3px;
+            font-size: clamp(1.3rem, 1vw, 4rem);
+            color: #88929e;
             display: flex;
             justify-content: space-between;
+            white-space: nowrap;
         }
 
         .iqamah-time {
-            color: #ffffff;
+            color: #88929e;
             font-weight: bold;
         }
 
         /* --- FOOTER / TICKER --- */
         footer {
             background-color: #5892c5;
-            border-radius: 15px;
-            height: 35px;
+            border-radius: 12px;
+            height: 30px;
             display: flex;
             align-items: center;
-            padding: 0 15px;
+            padding: 0 12px;
             overflow: hidden;
             box-shadow: inset 0 2px 4px rgba(0,0,0,0.2);
         }
 
         .speaker-icon {
-            font-size: 1.2rem;
-            margin-right: 15px;
+            font-size: 1rem;
+            margin-right: 10px;
         }
 
         .ticker-text {
             white-space: nowrap;
-            font-size: 0.95rem;
+            font-size: 0.85rem;
             animation: ticker 25s linear infinite;
         }
 
@@ -230,8 +259,8 @@
     <!-- Header Section -->
     <header>
         <div class="date-info">
-            <div id="gregorian-date">Loading date...</div>
-            <div id="hijri-date">Loading Hijri date...</div>
+            <div class="gregorian-date" id="gregorian-date">--</div>
+            <div class="hijri-date" id="hijri-date">--</div>
         </div>
         <div class="masjid-info">
             <div class="masjid-title">Masjid Al-Hikmah</div>
@@ -244,6 +273,10 @@
         <div class="next-prayer-container">
             <div class="next-label">NEXT</div>
             <div class="next-name" id="next-prayer-name">--</div>
+            <!-- Small white Tomorrow tag -->
+            <div class="next-day" id="next-prayer-day"></div>
+            <!-- Small white ADHAN / IQAMAH status tag -->
+            <div class="next-day" id="next-prayer-status"></div>
             <div class="next-countdown" id="next-prayer-countdown">00:00:00</div>
         </div>
 
@@ -340,90 +373,139 @@
     <!-- Ticker -->
     <footer>
         <span class="speaker-icon">📢</span>
-        <div class="ticker-text">Welcome to Masjid Al-Hikmah — Please ensure mobile phones are turned off or switched to silent mode while inside the prayer hall.</div>
+        <div class="ticker-text">Welcome to Masjid Al-Hikmah — Please ensure mobile phones are turned off or switched to silent mode while inside the prayer hall. S I L E N T</div>
     </footer>
 
     <script>
-        const PRAYER_SCHEDULE = [
-            { name: "Fajr",    id: "fajr",    time: [4, 31] },
-            { name: "Dhuhr",   id: "dhuhr",   time: [11, 59] },
-            { name: "Asr",     id: "asr",     time: [15, 20] },
-            { name: "Maghrib", id: "maghrib", time: [18, 11] },
-            { name: "Isha",    id: "isha",    time: [19, 21] }
+        // Prayer configuration with exact Adhan and Iqamah times
+        const PRAYERS = [
+            { id: 'fajr', name: 'Fajr', aHour: 4, aMin: 31, iHour: 4, iMin: 51 },
+            { id: 'dhuhr', name: 'Dhuhr', aHour: 11, aMin: 59, iHour: 12, iMin: 14 },
+            { id: 'asr', name: 'Asr', aHour: 15, aMin: 20, iHour: 15, iMin: 30 },
+            { id: 'maghrib', name: 'Maghrib', aHour: 18, aMin: 11, iHour: 18, iMin: 16 },
+            { id: 'isha', name: 'Isha', aHour: 19, aMin: 21, iHour: 19, iMin: 36 }
         ];
 
         function getHijriDate(date) {
             try {
-                // Uses Intl API with Islamic Umm al-Qura Calendar
-                const formatter = new Intl.DateTimeFormat('en-TN-u-ca-islamic-uma-nu-latn', {
-                    day: 'numeric',
-                    month: 'long',
-                    year: 'numeric'
+                const offsetDate = new Date(date);
+                offsetDate.setDate(offsetDate.getDate() + 0);
+                const formatter = new Intl.DateTimeFormat('en-u-ca-islamic-umalqura', {
+                    day: 'numeric', month: 'long', year: 'numeric'
                 });
-                return formatter.format(date) + " AH";
+                return formatter.format(offsetDate);
             } catch (e) {
-                return "Safar 15, 1448"; // Fallback format
+                return "Safar 16, 1448";
             }
         }
 
-        function updateDisplay() {
+        function updateClockAndCountdown() {
             const now = new Date();
-
-            // 1. Clock Update
             let hours = now.getHours();
             const minutes = String(now.getMinutes()).padStart(2, '0');
             const seconds = String(now.getSeconds()).padStart(2, '0');
             const ampm = hours >= 12 ? 'PM' : 'AM';
             const displayHours = hours % 12 || 12;
 
-            document.getElementById('clock-hours-mins').textContent = `${displayHours}:${minutes}`;
-            document.getElementById('clock-seconds').textContent = seconds;
-            document.getElementById('clock-ampm').textContent = ampm;
+            // 1. Clock Display
+            const clockHM = document.getElementById('clock-hours-mins');
+            const clockS = document.getElementById('clock-seconds');
+            const clockA = document.getElementById('clock-ampm');
+            if (clockHM) clockHM.textContent = `${displayHours}:${minutes}`;
+            if (clockS) clockS.textContent = seconds;
+            if (clockA) clockA.textContent = ampm;
 
-            // 2. Gregorian Date Update
-            const dateOptions = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' };
-            document.getElementById('gregorian-date').textContent = now.toLocaleDateString('en-US', dateOptions);
+            // 2. Dates
+            const gregElem = document.getElementById('gregorian-date');
+            if (gregElem) {
+                const dateOptions = { weekday: 'long', month: 'long', day: 'numeric', year: 'numeric' };
+                gregElem.textContent = now.toLocaleDateString('en-US', dateOptions);
+            }
+            const hijriElem = document.getElementById('hijri-date');
+            if (hijriElem) hijriElem.textContent = getHijriDate(now);
 
-            // 3. Hijri Date Update
-            document.getElementById('hijri-date').textContent = getHijriDate(now);
+            // 3. Multi-Stage Countdown Logic
+            let activePrayer = null;
+            let targetTime = null;
+            let statusText = '';
+            let isTomorrow = false;
 
-            // 4. Next Prayer Countdown Logic
-            let nextPrayer = null;
-            let nextPrayerTime = null;
+            for (let prayer of PRAYERS) {
+                let adhanTime = new Date(now);
+                adhanTime.setHours(prayer.aHour, prayer.aMin, 0, 0);
 
-            for (let prayer of PRAYER_SCHEDULE) {
-                const prayerDate = new Date(now);
-                prayerDate.setHours(prayer.time[0], prayer.time[1], 0, 0);
+                let iqamahTime = new Date(now);
+                iqamahTime.setHours(prayer.iHour, prayer.iMin, 0, 0);
 
-                if (prayerDate > now) {
-                    nextPrayer = prayer;
-                    nextPrayerTime = prayerDate;
+                // Stage A: Between Adhan and Iqamah
+                if (now >= adhanTime && now < iqamahTime) {
+                    activePrayer = prayer;
+                    targetTime = iqamahTime;
+                    statusText = 'IQAMAH';
+                    break;
+                } 
+                // Stage B: Before Adhan
+                else if (now < adhanTime) {
+                    activePrayer = prayer;
+                    targetTime = adhanTime;
+                    const diffMinsToAdhan = (adhanTime - now) / (1000 * 60);
+                    if (diffMinsToAdhan <= 15) {
+                        statusText = 'ADHAN';
+                    }
                     break;
                 }
             }
 
-            if (!nextPrayer) {
-                nextPrayer = PRAYER_SCHEDULE[0];
-                nextPrayerTime = new Date(now);
-                nextPrayerTime.setDate(nextPrayerTime.getDate() + 1);
-                nextPrayerTime.setHours(nextPrayer.time[0], nextPrayer.time[1], 0, 0);
+            // Stage C: All prayers today finished -> Next prayer is tomorrow's Fajr
+            if (!activePrayer) {
+                activePrayer = PRAYERS[0];
+                targetTime = new Date(now);
+                targetTime.setDate(targetTime.getDate() + 1);
+                targetTime.setHours(activePrayer.aHour, activePrayer.aMin, 0, 0);
+                isTomorrow = true;
+
+                // Check if late night is within 15 mins of tomorrow's Fajr
+                const diffMinsToFajr = (targetTime - now) / (1000 * 60);
+                if (diffMinsToFajr <= 15) {
+                    statusText = 'ADHAN';
+                }
             }
 
+            // Highlight Active Card
             document.querySelectorAll('.card').forEach(card => card.classList.remove('active'));
-            const activeCard = document.getElementById(`card-${nextPrayer.id}`);
+            const activeCard = document.getElementById(`card-${activePrayer.id}`);
             if (activeCard) activeCard.classList.add('active');
 
-            const timeDiff = Math.floor((nextPrayerTime - now) / 1000);
-            const countHours = String(Math.floor(timeDiff / 3600)).padStart(2, '0');
-            const countMins = String(Math.floor((timeDiff % 3600) / 60)).padStart(2, '0');
-            const countSecs = String(timeDiff % 60).padStart(2, '0');
+            // Time difference calculation
+            const diffMs = Math.max(0, targetTime - now);
+            const diffSecs = Math.floor(diffMs / 1000) % 60;
+            const diffMins = Math.floor(diffMs / (1000 * 60)) % 60;
+            const diffHours = Math.floor(diffMs / (1000 * 60 * 60));
 
-            document.getElementById('next-prayer-name').textContent = nextPrayer.name;
-            document.getElementById('next-prayer-countdown').textContent = `${countHours}:${countMins}:${countSecs}`;
+            const pad = (num) => String(num).padStart(2, '0');
+
+            // Timer display format
+            let timerDisplay = '';
+            if (statusText === 'ADHAN' || statusText === 'IQAMAH') {
+                timerDisplay = `${pad(diffMins)}:${pad(diffSecs)}`;
+            } else {
+                timerDisplay = `${pad(diffHours)}:${pad(diffMins)}:${pad(diffSecs)}`;
+            }
+
+            // Render text safely
+            const npName = document.getElementById('next-prayer-name');
+            const npDay = document.getElementById('next-prayer-day');
+            const npStatus = document.getElementById('next-prayer-status');
+            const npCountdown = document.getElementById('next-prayer-countdown');
+
+            if (npName) npName.textContent = activePrayer.name;
+            if (npDay) npDay.textContent = isTomorrow ? 'Tomorrow' : '';
+            if (npStatus) npStatus.textContent = statusText;
+            if (npCountdown) npCountdown.textContent = timerDisplay;
         }
 
-        updateDisplay();
-        setInterval(updateDisplay, 1000);
+        updateClockAndCountdown();
+        setInterval(updateClockAndCountdown, 1000);
     </script>
 </body>
 </html>
