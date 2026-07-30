@@ -252,6 +252,25 @@
             0% { transform: translateX(100%); }
             100% { transform: translateX(-100%); }
         }
+
+        /* Flashing Animation for SALAH */
+        @keyframes pulse-flash {
+            0% { opacity: 1; transform: scale(1); }
+            50% { opacity: 0.2; transform: scale(1.05); }
+            100% { opacity: 1; transform: scale(1); }
+        }
+
+        .salah-flashing {
+            animation: pulse-flash 1.2s infinite ease-in-out;
+            color: #eeece9 !important; /* Gold highlight color */
+            font-size: clamp(2rem, 4vw, 3.5rem) !important; /* Big text size */
+            font-weight: bold;
+        }
+
+        /* Class to hide elements */
+        .hidden {
+            display: none !important;
+        }
     </style>
 </head>
 <body>
@@ -424,11 +443,12 @@
             const hijriElem = document.getElementById('hijri-date');
             if (hijriElem) hijriElem.textContent = getHijriDate(now);
 
-            // 3. Multi-Stage Countdown Logic
+            // 3. Multi-Stage Countdown & Salah Logic
             let activePrayer = null;
             let targetTime = null;
             let statusText = '';
             let isTomorrow = false;
+            let isSalahMode = false;
 
             for (let prayer of PRAYERS) {
                 let adhanTime = new Date(now);
@@ -437,14 +457,24 @@
                 let iqamahTime = new Date(now);
                 iqamahTime.setHours(prayer.iHour, prayer.iMin, 0, 0);
 
-                // Stage A: Between Adhan and Iqamah
-                if (now >= adhanTime && now < iqamahTime) {
+                let salahEndTime = new Date(iqamahTime);
+                salahEndTime.setMinutes(salahEndTime.getMinutes() + 5); // 5 minutes Salah Duration
+
+                // Stage 1: Active SALAH Mode (5 Minutes after Iqamah)
+                if (now >= iqamahTime && now < salahEndTime) {
+                    activePrayer = prayer;
+                    statusText = 'SALAH';
+                    isSalahMode = true;
+                    break;
+                }
+                // Stage 2: Between Adhan and Iqamah
+                else if (now >= adhanTime && now < iqamahTime) {
                     activePrayer = prayer;
                     targetTime = iqamahTime;
                     statusText = 'IQAMAH';
                     break;
                 } 
-                // Stage B: Before Adhan
+                // Stage 3: Before Adhan
                 else if (now < adhanTime) {
                     activePrayer = prayer;
                     targetTime = adhanTime;
@@ -456,7 +486,7 @@
                 }
             }
 
-            // Stage C: All prayers today finished -> Next prayer is tomorrow's Fajr
+            // Stage 4: Next prayer is tomorrow's Fajr
             if (!activePrayer) {
                 activePrayer = PRAYERS[0];
                 targetTime = new Date(now);
@@ -464,7 +494,6 @@
                 targetTime.setHours(activePrayer.aHour, activePrayer.aMin, 0, 0);
                 isTomorrow = true;
 
-                // Check if late night is within 15 mins of tomorrow's Fajr
                 const diffMinsToFajr = (targetTime - now) / (1000 * 60);
                 if (diffMinsToFajr <= 15) {
                     statusText = 'ADHAN';
@@ -476,23 +505,7 @@
             const activeCard = document.getElementById(`card-${activePrayer.id}`);
             if (activeCard) activeCard.classList.add('active');
 
-            // Time difference calculation
-            const diffMs = Math.max(0, targetTime - now);
-            const diffSecs = Math.floor(diffMs / 1000) % 60;
-            const diffMins = Math.floor(diffMs / (1000 * 60)) % 60;
-            const diffHours = Math.floor(diffMs / (1000 * 60 * 60));
-
-            const pad = (num) => String(num).padStart(2, '0');
-
-            // Timer display format
-            let timerDisplay = '';
-            if (statusText === 'ADHAN' || statusText === 'IQAMAH') {
-                timerDisplay = `${pad(diffMins)}:${pad(diffSecs)}`;
-            } else {
-                timerDisplay = `${pad(diffHours)}:${pad(diffMins)}:${pad(diffSecs)}`;
-            }
-
-            // Render text safely
+            // Render elements
             const npName = document.getElementById('next-prayer-name');
             const npDay = document.getElementById('next-prayer-day');
             const npStatus = document.getElementById('next-prayer-status');
@@ -500,8 +513,38 @@
 
             if (npName) npName.textContent = activePrayer.name;
             if (npDay) npDay.textContent = isTomorrow ? 'Tomorrow' : '';
-            if (npStatus) npStatus.textContent = statusText;
-            if (npCountdown) npCountdown.textContent = timerDisplay;
+
+            // Handle SALAH Flashing & Timer Hiding
+            if (npStatus) {
+                npStatus.textContent = statusText;
+                if (isSalahMode) {
+                    npStatus.classList.add('salah-flashing');
+                } else {
+                    npStatus.classList.remove('salah-flashing');
+                }
+            }
+
+            if (npCountdown) {
+                if (isSalahMode) {
+                    // Hide timer during 5-minute SALAH
+                    npCountdown.classList.add('hidden');
+                } else {
+                    // Show timer normally
+                    npCountdown.classList.remove('hidden');
+
+                    const diffMs = Math.max(0, targetTime - now);
+                    const diffSecs = Math.floor(diffMs / 1000) % 60;
+                    const diffMins = Math.floor(diffMs / (1000 * 60)) % 60;
+                    const diffHours = Math.floor(diffMs / (1000 * 60 * 60));
+                    const pad = (num) => String(num).padStart(2, '0');
+
+                    if (statusText === 'ADHAN' || statusText === 'IQAMAH') {
+                        npCountdown.textContent = `${pad(diffMins)}:${pad(diffSecs)}`;
+                    } else {
+                        npCountdown.textContent = `${pad(diffHours)}:${pad(diffMins)}:${pad(diffSecs)}`;
+                    }
+                }
+            }
         }
 
         updateClockAndCountdown();
